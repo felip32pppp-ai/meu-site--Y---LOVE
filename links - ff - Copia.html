@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felipe & Joice - Nosso Amor</title>
+    <!-- SwiperJS CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e75480;
+            --primary-dark: #d44a74;
+            --secondary-color: #ff69b4;
+            --accent-color: #ff1493;
+            --dark-bg: #1a1a2e;
+            --darker-bg: #16213e;
+            --text-color: #ffffff;
+            --light-text: #f8f8f8;
+            --light-bg: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --border-radius: 20px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 50%, #0f3460 100%);
+            overflow-x: hidden;
+            color: var(--text-color);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(231, 84, 128, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 105, 180, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 20, 147, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .rose-petals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50% 0 50% 0;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            transform: rotate(45deg);
+            opacity: 0.7;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: -10px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(45deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(45deg); opacity: 0.9; }
+        }
+
+        /* Estilo do botão de entrar */
+        .enter-button {
+            font-size: 1.5rem;
+            font-weight: 500;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(231, 84, 128, 0.4);
+            transition: var(--transition);
+            z-index: 100;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enter-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .enter-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(231, 84, 128, 0.6);
+        }
+
+        .enter-button:hover::before {
+            left: 100%;
+        }
+
+        /* Estilo do conteúdo que será oculto inicialmente */
+        .content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin: 20px 0 30px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--light-text);
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .text-container {
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            margin: 20px auto;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .text-container::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 8rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.3;
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* Container do carrossel com setas abaixo */
+        .carousel-container {
+            width: 90%;
+            max-width: 500px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: auto;
+            padding: 10px 0 20px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 70px; /* Espaço para as setas */
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+        }
+
+        .swiper-slide img {
+            width: 90%;
+            max-width: 400px;
+            height: auto;
+            aspect-ratio: 1/1;
+            border-radius: calc(var(--border-radius) - 5px);
+            object-fit: cover;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .swiper-slide:hover img {
+            transform: scale(1.03);
+        }
+
+        /* Container das setas abaixo da imagem */
+        .swiper-nav-container {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            z-index: 20;
+        }
+
+        .swiper-button-custom {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .swiper-button-custom:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(231, 84, 128, 0.4);
+        }
+
+        /* Nome do casal - agora com mais espaço */
+        .couple-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 50px 0 30px; /* Mais espaço acima */
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            box-shadow: var(--box-shadow);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            z-index: 5; /* Garante que fique acima de outros elementos */
+        }
+
+        .couple-name::before, .couple-name::after {
+            content: "❤";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .couple-name::before {
+            left: 15px;
+        }
+
+        .couple-name::after {
+            right: 15px;
+        }
+
+        /* Frase de amor fixa na grid - agora com mais espaço */
+        .romantic-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--light-text);
+            margin: 30px 0;
+            line-height: 1.6;
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .romantic-quote::before {
+            content: """;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.5;
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* Estilo da grid de tempo */
+        .time-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            width: 90%;
+            max-width: 800px;
+            gap: 15px;
+        }
+
+        .time-item {
+            text-align: center;
+            padding: 25px 15px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex: 1;
+            min-width: 150px;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .time-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .time-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .time-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .time-label {
+            font-size: 1rem;
+            color: var(--light-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        /* Estilo do GIF que será exibido antes do conteúdo */
+        .loading-gif {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .loading-gif img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        .loading-text {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 500;
+        }
+
+        /* Estilo da paginação do swiper */
+        .swiper-pagination {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+        }
+
+        .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0.8;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--primary-color);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .footer p {
+            margin: 5px 0;
+            opacity: 0.8;
+        }
+
+        /* Animações suaves */
+        .fade-in {
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Media Queries para responsividade */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.8rem;
+            }
+            
+            .text-container {
+                font-size: 1.8rem;
+                margin: 15px auto;
+                padding: 15px 20px;
+            }
+            
+            .carousel-container {
+                width: 95%;
+            }
+            
+            .swiper-container {
+                margin-bottom: 60px;
+            }
+            
+            .swiper-nav-container {
+                bottom: -50px;
+                gap: 20px;
+            }
+            
+            .swiper-button-custom {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+            
+            .couple-name {
+                font-size: 2rem;
+                margin: 40px 0 20px; /* Ajuste para mobile */
+                padding: 12px 30px;
+            }
+            
+            .romantic-quote {
+                font-size: 1.1rem;
+                margin: 20px 0;
+                padding: 20px;
+            }
+            
+            .time-item {
+                padding: 20px 10px;
+                min-width: 120px;
+            }
+            
+            .time-value {
+                font-size: 2rem;
+            }
+            
+            .enter-button {
+                font-size: 1.3rem;
+                padding: 15px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .text-container {
+                font-size: 1.5rem;
+                margin: 10px auto;
+                padding: 12px 15px;
+            }
+            
+            .text-container::before {
+                font-size: 5rem;
+                top: -10px;
+            }
+            
+            .swiper-nav-container {
+                bottom: -45px;
+                gap: 15px;
+            }
+            
+            .swiper-button-custom {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .couple-name {
+                font-size: 1.8rem;
+                margin: 30px 0 15px; /* Ajuste para mobile */
+            }
+            
+            .romantic-quote {
+                font-size: 1rem;
+                margin: 15px 0;
+                padding: 15px;
+            }
+            
+            .romantic-quote::before {
+                font-size: 3rem;
+            }
+            
+            .time-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .time-item {
+                width: 80%;
+                margin-bottom: 15px;
+            }
+            
+            .enter-button {
+                font-size: 1.2rem;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pétalas de rosa caindo -->
+    <div class="rose-petals" id="rosePetals"></div>
+
+    <!-- Corações flutuantes -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Botão de Entrar -->
+    <button class="enter-button" onclick="showGif()">
+        <i class="fas fa-heart" style="margin-right: 10px;"></i>Entrar
+    </button>
+
+    <!-- GIF que aparece por 5 segundos -->
+    <div class="loading-gif">
+        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhL9IoqzEDEajs9Q1KD-V-g-92ff2aJPiE0HpbA_l6Osc1b45cUNJNKNZV3x2KOaOt9CljuqKMrghGI5-PEVtUKFz6VRhTIXH1F8eljnjjoryYoyulUHOOu1_daGdyMpjYFve8tgXM5YLYTZ0cgFOYrD5CTVDBW7qL9O6QS8W4xMJVGw_hJzdce6WtwQjU" alt="Loading">
+        <div class="loading-text">Carregando nosso amor...</div>
+    </div>
+
+    <!-- Conteúdo que será exibido após 5 segundos -->
+    <div class="content">
+        <!-- Cabeçalho -->
+        <div class="header fade-in">
+            <h1>Felipe & Joice</h1>
+            <p>Uma história de amor que começou em 21 de Setembro de 2021</p>
+        </div>
+
+        <!-- Texto Centralizado no Topo -->
+        <div class="text-container fade-in">
+            EU AMO VOCÊ
+        </div>
+
+        <!-- Container do carrossel com setas abaixo -->
+        <div class="carousel-container fade-in">
+            <!-- Carrossel de Fotos -->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgfZfnXxJHnK52PHErxS63M5KvBziRFYFZQFBT4qKkKg01JSGDww9hZvdIhNyNPwcIKXOFvRtOV8W8mDm0lcveKouBnB9zLS_k-LgoAp3tXZryREbNc_EhUXIEgkWngdDTa6gaWB7JEVgwyHjU8PGv4D-brgvsFTdNB7AdRMPO21XRg_sCA3TuasLETiaMR" alt="Photo 1">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEhCG_Mk8C3MA3l-urPDkH1wzEfct1awvRr49zT3kcEiI7pLhGjxyzMaAaIK5KgYlf-45j-v9qkLjlndF4VKG9QN8_gRNdtTcvVAMiyZCR-HLr7lim0d5gsB9DlI-QjUHgQQIXSVAS1boM7McGR9IcvgDgKVgCCBiW3lsg9QE48jsqvYtaMVegeh8FCwHWHt" alt="Photo 2">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgSHsVslMwXxu5R8xGQZaK-IVaDRdrLN5w9gWb8Sv6GxOKcA92U1Jq06ri_j9XNvoViHDZYqzSGfdcwIhBfEWYYiGBH4KSc2nGhqBsjDjl4c9LMQcRiwclQ1JlwLY-M4PQDqRJdhN-9Z0TBOOrQMUIu4vc_DCqVCCKtUwe0ejPInIeiKKcerpZq9Nk3KhCz" alt="Photo 3">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjp78n6l16y1G1ur9hSsAQ8kuUZmUfRVddHw_TKIrMJbjyn8bScXETxOXlNCYaxkwY4ZTsinWJwcb9N6tZlfA8uG0OTDFPgFfV39fhyoRvs-uTHbsbWTCyUt2U7OgOZwoSkN7au_1pipQiqVxZxkH_nEgLXQ_cYel0oee_qYnRWS60N8_7oWHHrHZgSJAEl" alt="Photo 4">
+                    </div>
+                </div>
+                <!-- Adiciona Paginação -->
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <!-- Container das setas de navegação -->
+            <div class="swiper-nav-container">
+                <div class="swiper-button-custom swiper-button-prev-custom">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="swiper-button-custom swiper-button-next-custom">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nome do Casal - AGORA COM MAIS ESPAÇO -->
+        <div class="couple-name fade-in">
+            Felipe e Joice
+        </div>
+
+        <!-- Frase de Amor Fixa - AGORA COM MAIS ESPAÇO -->
+        <div class="romantic-quote fade-in">
+            "Amar é como respirar, algo que acontece naturalmente, sem esforço. Cada olhar, cada toque, é uma promessa silenciosa de estar juntos para sempre. Em teus braços, encontro meu lar, meu abrigo. E ao teu lado, tudo faz sentido, cada momento é eterno."
+        </div>
+
+        <!-- Grid de Tempo (Ano, Mês, Dia) -->
+        <div class="time-grid fade-in">
+            <div class="time-item">
+                <span class="time-value" id="years">1</span>
+                <span class="time-label">Anos Juntos</span>
+            </div>
+            <div class="time-item">
+                <span class="time-value" id="months">0</span>
+                <span class="time-label">Meses</span>
+            </div>
+            <div class="time-item">
+                <span class="time-value" id="days">11</span>
+                <span class="time-label">Dias</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer fade-in">
+            <p>Feito com ❤️ para o amor da minha vida</p>
+            <p>Felipe & Joice - Para Sempre</p>
+        </div>
+    </div>
+
+    <!-- SwiperJS Script -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Criar corações flutuantes
+        function createHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartCount = 15;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                // Posição aleatória
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const size = Math.random() * 10 + 10;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 10;
+                
+                heart.style.left = `${left}%`;
+                heart.style.top = `${top}%`;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(heart);
+            }
+        }
+
+        // Criar pétalas de rosa caindo
+        function createRosePetals() {
+            const container = document.getElementById('rosePetals');
+            const petalCount = 20;
+            
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                // Posição e tamanho aleatórios
+                const left = Math.random() * 100;
+                const size = Math.random() * 20 + 10;
+                const delay = Math.random() * 10;
+                const duration = Math.random() * 20 + 10;
+                const opacity = Math.random() * 0.5 + 0.3;
+                
+                petal.style.left = `${left}%`;
+                petal.style.top = `-${size}px`;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                petal.style.animationDelay = `${delay}s`;
+                petal.style.animationDuration = `${duration}s`;
+                petal.style.opacity = opacity;
+                
+                container.appendChild(petal);
+            }
+        }
+
+        // Função para mostrar o GIF e esconder o botão
+        function showGif() {
+            document.querySelector('.enter-button').style.display = 'none';
+            document.querySelector('.loading-gif').style.display = 'block';
+
+            // Após 5 segundos, exibe o conteúdo e oculta o GIF
+            setTimeout(function() {
+                document.querySelector('.loading-gif').style.display = 'none';
+                document.querySelector('.content').style.display = 'flex';
+                startTimer(); // Inicia o contador
+                updateTimer(); // Atualiza o contador a cada segundo
+            }, 5000); // 5 segundos
+        }
+
+        // Função para calcular a diferença de tempo corretamente
+        const startDate = new Date("2021-09-21"); // Data de início do namoro
+        
+        function calculateTimeDifference() {
+            const now = new Date();
+            let years = now.getFullYear() - startDate.getFullYear();
+            let months = now.getMonth() - startDate.getMonth();
+            let days = now.getDate() - startDate.getDate();
+
+            // Ajuste para dias negativos
+            if (days < 0) {
+                months--;
+                // Dias no mês anterior
+                const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            // Ajuste para meses negativos
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            return { years, months, days };
+        }
+
+        function updateTimer() {
+            const { years, months, days } = calculateTimeDifference();
+            
+            // Atualiza a interface com os valores calculados
+            document.getElementById('years').innerText = years;
+            document.getElementById('months').innerText = months;
+            document.getElementById('days').innerText = days;
+        }
+
+        function startTimer() {
+            updateTimer();
+            // Atualiza o contador a cada segundo
+            setInterval(updateTimer, 1000);
+        }
+
+        // Inicializa o Swiper
+        const swiper = new Swiper('.swiper-container', {
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            slidesPerView: 1,
+            spaceBetween: 10,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next-custom',
+                prevEl: '.swiper-button-prev-custom',
+            },
+        });
+
+        // Inicializar elementos quando a página carregar
+        window.addEventListener('load', function() {
+            createHearts();
+            createRosePetals();
+        });
+    </script>
+
+</body>
+</html>
